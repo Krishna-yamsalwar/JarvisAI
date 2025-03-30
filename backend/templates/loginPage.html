@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MailCraft AI - Sign Up</title>
+    <style>
+      :root {
+        --bg-gradient-start: #f3e8ff;
+        --bg-gradient-middle: #e0f2fe;
+        --bg-gradient-end: #fae8ff;
+        --text-primary: #1a1a1a;
+        --text-secondary: #4b5563;
+        --glass-bg: rgba(255, 255, 255, 0.3);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --input-bg: rgba(255, 255, 255, 0.5);
+        --feature-icon-bg: #f3e8ff;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-gradient-start: #1a1a1a;
+          --bg-gradient-middle: #2d1b69;
+          --bg-gradient-end: #1a1a1a;
+          --text-primary: #ffffff;
+          --text-secondary: #9ca3af;
+          --glass-bg: rgba(255, 255, 255, 0.1);
+          --glass-border: rgba(255, 255, 255, 0.1);
+          --input-bg: rgba(255, 255, 255, 0.1);
+          --feature-icon-bg: rgba(147, 51, 234, 0.2);
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          var(--bg-gradient-start),
+          var(--bg-gradient-middle),
+          var(--bg-gradient-end)
+        );
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Background effects */
+      .bg-effect {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .bg-effect .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(3rem);
+        opacity: 0.5;
+        animation: pulse 8s ease-in-out infinite;
+      }
+
+      .bg-effect .blob:nth-child(1) {
+        top: 25%;
+        left: 25%;
+        width: 20rem;
+        height: 20rem;
+        background: rgba(138, 43, 226, 0.2);
+      }
+
+      .bg-effect .blob:nth-child(2) {
+        bottom: 25%;
+        right: 33%;
+        width: 15rem;
+        height: 15rem;
+        background: rgba(74, 0, 224, 0.15);
+        animation-delay: 2s;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.5;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(1.05);
+        }
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+
+      .content-wrapper {
+        width: 100%;
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 2rem;
+      }
+
+      @media (min-width: 768px) {
+        .content-wrapper {
+          flex-direction: row;
+          align-items: center;
+        }
+      }
+
+      /* Form styles */
+      .form-container {
+        flex: 1;
+        max-width: 450px;
+        width: 100%;
+      }
+
+      .glass-card {
+        backdrop-filter: blur(12px);
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        width: 100%;
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .form-header h2 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      .form-header p {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 0.875rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-secondary);
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        background: var(--input-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.3s;
+        color: var(--text-primary);
+      }
+
+      .form-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.3);
+      }
+
+      .form-input::placeholder {
+        color: var(--text-secondary);
+        opacity: 0.7;
+      }
+
+      .password-hint {
+        margin-top: 0.25rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #8a2be2, #4a00e0);
+        color: white;
+        height: 2.75rem;
+      }
+
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+
+      .btn-outline {
+        background: var(--input-bg);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+      }
+
+      .btn-outline:hover {
+        opacity: 0.8;
+      }
+
+      .btn .icon {
+        width: 1rem;
+        height: 1rem;
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--glass-border);
+      }
+
+      .divider span {
+        padding: 0 0.75rem;
+      }
+
+      .social-buttons {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .social-buttons .btn {
+        flex: 1;
+      }
+
+      .footer-text {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+      }
+
+      .footer-text a {
+        color: #8a2be2;
+        text-decoration: none;
+      }
+
+      .footer-text a:hover {
+        text-decoration: underline;
+      }
+
+      /* Image Side */
+      .image-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .image-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      }
+
+      @keyframes slide-up {
+        0% {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-slide-up {
+        animation: slide-up 0.5s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-effect">
+      <div class="blob"></div>
+      <div class="blob"></div>
+    </div>
+
+    <div class="container">
+      <div class="content-wrapper">
+        <div class="form-container animate-slide-up">
+          <div class="glass-card">
+            <div class="form-header">
+              <h2>Create account</h2>
+              <p>
+                Sign up to EasyMail and start writing perfect emails with AI
+              </p>
+            </div>
+
+            <form id="signup-form">
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                      ></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-input"
+                    placeholder="John Doe"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path
+                        d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                      ></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </div>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-input"
+                    placeholder="you@example.com"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password">Email Password</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="11"
+                        width="18"
+                        height="11"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-input"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+                <p class="password-hint">
+                  Password must be at least 8 characters long
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label for="ApplicationPassword">Application Password</label>
+                <div class="input-wrapper">
+                  <div class="input-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect
+                        x="3"
+                        y="11"
+                        width="18"
+                        height="11"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path
+                    </svg>
+                  </div>
+                  <input
+                    type="password"
+                    id="ApplicationPassword"
+                    name="ApplicationPassword"
+                    class="form-input"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+                <p class="password-hint">ex- cwsy oicb nwwd yxsy</p>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="submit-btn">
+                <span>Create account</span>
+                <svg
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </form>
+
+            <div class="divider">
+              <span>or continue with</span>
+            </div>
+
+            <div class="social-buttons">
+              <button class="btn btn-outline" id="google-btn">
+                <svg
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                    fill="#4285F4"
+                  />
+                  <path
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                    fill="#34A853"
+                  />
+                  <path
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                    fill="#FBBC05"
+                  />
+                  <path
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                    fill="#EA4335"
+                  />
+                </svg>
+                Google
+              </button>
+              <button class="btn btn-outline" id="facebook-btn">
+                <svg
+                  class="icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="#1877F2"
+                >
+                  <path
+                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                  />
+                </svg>
+                Facebook
+              </button>
+            </div>
+
+            <div class="footer-text">
+              Already have an account? <a href="#">Sign in</a>
+            </div>
+          </div>
+        </div>
+
+   
+      </div>
+    </div>
+    
+ <script type="module">
+    // ✅ 1. Import all Firebase modules at the top
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-analytics.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } 
+    from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+  
+    // ✅ 2. Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCmZylL7HRNfQQy5NFYWg-Cr5QTIeA5XXQ",
+      authDomain: "easymail-aebaf.firebaseapp.com",
+      projectId: "easymail-aebaf",
+      storageBucket: "easymail-aebaf.appspot.com",
+      messagingSenderId: "21079477701",
+      appId: "1:21079477701:web:97db83c5c95983ffe80fac",
+      measurementId: "G-MQKGFKQY6T",
+    };
+  
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+  
+    // ✅ 3. Handle Email & Password Signup
+    document.addEventListener("DOMContentLoaded", () => {
+      const submit = document.getElementById("submit-btn");
+  
+      if (submit) {
+        submit.addEventListener("click", () => {
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          alert(`Email: ${email}\nPassword: ${password}`);
+  
+          createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              alert('Creating account...');
+              console.log("User signed up:", userCredential.user);
+              window.location.href = '/interface';
+            })
+            .catch((error) => {
+              alert('Error Creating account...');
+              console.error("Error:", error.message);
+            });
+        });
+      } else {
+        console.error("Button with ID 'submit-btn' not found.");
+      }
+  
+      // ✅ 4. Handle Google Sign-in
+      const googlebtn = document.getElementById('google-btn');
+      
+      if (googlebtn) {
+        googlebtn.addEventListener('click', () => {
+          signInWithPopup(auth, provider)
+            .then((result) => {
+              console.log("User signed in:", result.user);
+              window.location.href = '/interface';
+
+            })
+            .catch((error) => {
+              console.error("Error:", error.message);
+            });
+        });
+      } else {
+        console.error("Button with ID 'google-btn' not found.");
+      }
+    });
+  </script>
+  
+  
+  
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Upload Files</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #007bff;
+            padding: 20px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            cursor: pointer;
+        }
+        #drop-area.highlight {
+            background-color: #e3f2fd;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        /* .container-droup{
+            width: 100px;
+            height: 200px;
+        } */
+    </style>
+</head>
+<body>
+<div class="container-droup"> 
+    <h1>Upload Multiple Files</h1>
+
+    <!-- Drag and Drop Area -->
+    <div id="drop-area">
+        <p>Drag & Drop files here or click to upload</p>
+        <input type="file" id="fileInput" name="files" multiple>
+    </div>
+
+    <button id="uploadButton">Upload</button>
+
+    <ul id="file-list"></ul>
+
+
+</div>
+   
+
+    <script>
+        const dropArea = document.getElementById("drop-area");
+        const fileInput = document.getElementById("fileInput");
+        const fileList = document.getElementById("file-list");
+
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, (e) => e.preventDefault());
+        });
+
+        // Highlight drop area when dragging
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.add("highlight"));
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, () => dropArea.classList.remove("highlight"));
+        });
+
+        // Handle dropped files
+        dropArea.addEventListener("drop", (e) => {
+            const files = e.dataTransfer.files;
+            fileInput.files = files;
+            displayFileList(files);
+        });
+
+        // Handle file selection
+        dropArea.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", () => displayFileList(fileInput.files));
+
+        function displayFileList(files) {
+            fileList.innerHTML = "";
+            for (const file of files) {
+                const li = document.createElement("li");
+                li.textContent = file.name;
+                fileList.appendChild(li);
+            }
+        }
+
+        // Upload files to Flask backend
+        document.getElementById("uploadButton").addEventListener("click", () => {
+            const files = fileInput.files;
+            if (files.length === 0) {
+                alert("Please select a file first.");
+                return;
+            }
+
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append("files", file);
+            }
+
+            fetch("/uploadFiles", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => alert('uploaded sussfully'))
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+
+</body>
+</html>

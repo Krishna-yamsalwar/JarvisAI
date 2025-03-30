@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot</title>
+    <style>
+  
+
+        /* Chat Container Styling */
+        #chat-container {
+            width: 400px;
+            height: 600px;
+            background: var(--gray-50);
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        /* Chat Header Styling */
+        #chat-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Chat Content Area Styling */
+        #chat-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+            background: var(--gray-100);
+        }
+
+        /* Message Styling */
+        .message {
+            margin: 5px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+
+        /* User Message Styling */
+        .user {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Bot Message Styling */
+        .bot {
+            background-color: var(--gray-50);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Input Container Styling */
+        #input-container {
+            display: flex;
+            padding: 10px;
+            background: var(--gray-300);
+            border-top: 1px solid var(--gray-400);
+        }
+
+        /* Chat Input Styling */
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+            background: var(--gray-50);
+        }
+
+        /* Send Button Styling */
+        #send-btn {
+            padding: 10px 15px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 16px;
+        }
+
+        #send-btn:hover {
+            background: var(--primary-light);
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container">
+        <div id="chat-header">AI Chat</div>
+        <div id="chat-content"></div>
+        <div id="input-container">
+            <input type="text" id="chat-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+            <button id="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+
+        async function sendMessage() {
+            const inputField = document.getElementById("chat-input");
+            const message = inputField.value.trim();
+
+            if (!message) return;
+
+            const chatContent = document.getElementById("chat-content");
+
+            // Display user message
+            const userMessage = document.createElement("div");
+            userMessage.classList.add("message", "user");
+            userMessage.textContent = message;
+            chatContent.appendChild(userMessage);
+            chatContent.scrollTop = chatContent.scrollHeight;
+
+            // Clear input field
+            inputField.value = "";
+
+            // Send request to chatbot API
+            try {
+                const response = await fetch("/chatbot", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+
+                // Display bot response
+                const botMessage = document.createElement("div");
+                botMessage.classList.add("message", "bot");
+                botMessage.textContent = data.response;
+                chatContent.appendChild(botMessage);
+                chatContent.scrollTop = chatContent.scrollHeight;
+            } catch (error) {
+                console.error("Error fetching chatbot response:", error);
+                //Display Error message to user.
+                const errorMessage = document.createElement("div");
+                errorMessage.classList.add("message", "bot");
+                errorMessage.textContent = "Error: Could not retrieve response.";
+                chatContent.appendChild(errorMessage);
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+
+        }
+    </script>
+</body>
+</html>

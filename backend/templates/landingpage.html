@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MailGenius - AI Email Composer</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    [data-theme="light"] {
+      --bg-gradient-start: #f3e8ff;
+      --bg-gradient-middle: #e0f2fe;
+      --bg-gradient-end: #fae8ff;
+      --text-primary: #1a1a1a;
+      --text-secondary: #4b5563;
+      --glass-bg: rgba(255, 255, 255, 0.3);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --input-bg: rgba(255, 255, 255, 0.5);
+      --feature-icon-bg: #f3e8ff;
+    }
+
+    [data-theme="dark"] {
+      --bg-gradient-start: #1a1a1a;
+      --bg-gradient-middle: #2d1b69;
+      --bg-gradient-end: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #9ca3af;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(255, 255, 255, 0.1);
+      --feature-icon-bg: rgba(147, 51, 234, 0.2);
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(-45deg, 
+        var(--bg-gradient-start),
+        var(--bg-gradient-middle),
+        var(--bg-gradient-end));
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      color: var(--text-primary);
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    ::selection {
+      background: rgba(147, 51, 234, 0.2);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 1rem 0 1rem;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      background: var(--glass-border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      font-size: 1.25rem;
+      font-weight: bold;
+      background: linear-gradient(to right, #9333ea, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .try-now {
+      background: linear-gradient(45deg, #9333ea, #3b82f6);
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      background-size: 200% 200%;
+    }
+
+    .try-now:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      text-align: center;
+      max-width: 64rem;
+      margin: 0 auto 4rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #9333ea, #3b82f6, #9333ea);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      background-size: 200% auto;
+      animation: shine 5s linear infinite;
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      background: linear-gradient(45deg, #9333ea, #3b82f6);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      background-size: 200% 200%;
+    }
+
+    .cta-button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(147, 51, 234, 0.2);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .feature-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      border: 1px solid var(--glass-border);
+      transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      background: var(--feature-icon-bg);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon svg {
+      color: #9333ea;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+    }
+
+    .social-proof {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .social-proof h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .company-logos {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+
+    .company-logos img {
+      height: 3rem;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+      filter: var(--theme) === 'dark' ? 'invert(1)' : 'none';
+    }
+
+    .company-logos img:hover {
+      opacity: 0.75;
+    }
+
+    .cta-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 3rem;
+      border: 1px solid var(--glass-border);
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 1.875rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .cta-section p {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+    }
+
+    .composer {
+      display: none;
+      padding: 1.5rem;
+    }
+
+    .back-button {
+      color: #9333ea;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .back-button:hover {
+      color: #7e22ce;
+    }
+
+    .composer-container {
+      max-width: 64rem;
+      margin: 0 auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(8px);
+      border-radius: 1rem;
+      padding: 2rem;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .composer-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .composer-header h1 {
+      font-size: 1.875rem;
+      background: linear-gradient(to right, #9333ea, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .composer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .input-group input,
+    .input-group textarea {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--input-bg);
+      border: 1px solid var(--glass-border);
+      outline: none;
+      transition: all 0.2s;
+      color: var(--text-primary);
+    }
+
+    .input-group input:focus,
+    .input-group textarea:focus {
+      box-shadow: 0 0 0 2px rgba(147, 51, 234, 0.5);
+    }
+
+    .input-group textarea {
+      height: 8rem;
+      resize: vertical;
+    }
+
+    .generate-button {
+      width: 100%;
+      background: linear-gradient(45deg, #9333ea, #3b82f6);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      background-size: 200% 200%;
+    }
+
+    .generate-button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+    }
+
+    .generate-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .output-container {
+      position: relative;
+    }
+
+    .output-container textarea {
+      height: calc(100% - 1rem);
+      min-height: 200px;
+    }
+
+    .send-button {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      background: linear-gradient(45deg, #9333ea, #3b82f6);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      background-size: 200% 200%;
+    }
+
+    .send-button:hover {
+      background-position: right center;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .composer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="landing" class="container">
+    <nav>
+      <div class="logo">
+       <img src="./Group 1 (1).svg" style= " height: 30px;" alt="">
+        <span>EasyMail</span>
+      </div>
+      <div class="nav-buttons">
+        <button class="theme-toggle" onclick="toggleTheme()">
+          <i data-lucide="sun" style="width: 1.5rem; height: 1.5rem;" id="theme-icon"></i>
+        </button>
+        <a href="./loginPage">
+            <button class="try-now" >
+                Try Now
+                <i data-lucide="chevron-right" style="width: 1rem; height: 1rem;"></i>
+              </button>
+        </a>
+
+      </div>
+    </nav>
+</div>
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.76/build/spline-viewer.js"></script>
+   
+    <spline-viewer url="https://prod.spline.design/6HnYrpX6Y8dCdntG/scene.splinecode" class="__web-inspector-hide-shortcut__"></spline-viewer>
+
+    <div class="hero">
+      <h1>Craft Perfect Emails with AI</h1>
+      <p>Transform your ideas into professional emails in seconds. Perfect for business communication, networking, and more.</p>
+      <button class="cta-button" onclick="showComposer()">Start Writing Now</button>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="zap" style="width: 1.5rem; height: 1.5rem;"></i>
+        </div>
+        <h3>Lightning Fast</h3>
+        <p>Generate professional emails in seconds with our advanced AI technology.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="message-square" style="width: 1.5rem; height: 1.5rem;"></i>
+        </div>
+        <h3>Context Aware</h3>
+        <p>Our AI understands your intent and generates perfectly tailored emails.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i data-lucide="lock" style="width: 1.5rem; height: 1.5rem;"></i>
+        </div>
+        <h3>Secure & Private</h3>
+        <p>Your data is encrypted and never stored. Privacy is our priority.</p>
+      </div>
+    </div>
+
+    <div class="social-proof">
+      <h2>Trusted by professionals worldwide</h2>
+      <div class="company-logos">
+        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&crop=edges" alt="Company 1">
+        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&crop=edges" alt="Company 2">
+        <img src="https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=200&h=100&fit=crop&crop=edges" alt="Company 3">
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Ready to transform your email communication?</h2>
+      <p>Join thousands of professionals who trust MailGenius for their important communications.</p>
+      <button class="cta-button" onclick="showComposer()">Get Started Free</button>
+    </div>
+  
+
+  <div id="composer" class="composer">
+    <button class="back-button" onclick="showLanding()">
+      <i data-lucide="arrow-left" style="width: 1rem; height: 1rem;"></i>
+      Back to Home
+    </button>
+    <div class="composer-container">
+      <div class="composer-header">
+        <i data-lucide="mail" style="width: 2rem; height: 2rem; color: #9333ea;"></i>
+        <h1>AI Email Composer</h1>
+      </div>
+
+      <div class="composer-grid">
+        <div class="input-section">
+          <div class="input-group">
+            <label for="recipient">Recipient Email</label>
+            <input type="email" id="recipient" placeholder="recipient@example.com">
+          </div>
+          <div class="input-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" placeholder="Enter email subject">
+          </div>
+          <div class="input-group">
+            <label for="context">Context for AI</label>
+            <textarea id="context" placeholder="Describe what you want to communicate..."></textarea>
+          </div>
+          <button id="generateBtn" class="generate-button" onclick="generateEmail()">
+            <i data-lucide="sparkles" style="width: 1.25rem; height: 1.25rem;"></i>
+            Generate Email
+          </button>
+        </div>
+
+        <div class="output-container">
+          <label for="generated" class="block text-sm font-medium text-gray-700 mb-2">Generated Email</label>
+          <textarea id="generated" placeholder="Your AI-generated email will appear here..."></textarea>
+          <button id="sendBtn" class="send-button" style="display: none;" onclick="sendEmail()">
+            <i data-lucide="send" style="width: 1rem; height: 1rem;"></i>
+            Send Email
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Theme toggling
+    function toggleTheme() {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      html.setAttribute('data-theme', newTheme);
+      themeIcon.setAttribute('data-lucide', newTheme === 'light' ? 'sun' : 'moon');
+      lucide.createIcons();
+
+      // Save theme preference
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('theme-icon').setAttribute('data-lucide', savedTheme === 'light' ? 'sun' : 'moon');
+    lucide.createIcons();
+
+    // Show/hide sections
+    function showComposer() {
+      document.getElementById('landing').style.display = 'none';
+      document.getElementById('composer').style.display = 'block';
+    }
+
+    function showLanding() {
+      document.getElementById('landing').style.display = 'block';
+      document.getElementById('composer').style.display = 'none';
+    }
+
+    // Email generation
+    function generateEmail() {
+      const recipient = document.getElementById('recipient').value;
+      const context = document.getElementById('context').value;
+      const generateBtn = document.getElementById('generateBtn');
+      const sendBtn = document.getElementById('sendBtn');
+
+      if (!context) return;
+
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = '<i data-lucide="loader" style="width: 1.25rem; height: 1.25rem;"></i> Generating...';
+      lucide.createIcons();
+
+      setTimeout(() => {
+        const emailTemplate = `Dear ${recipient},
+
+I hope this email finds you well. ${context}
+
+Best regards,
+[Your name]`;
+        
+        document.getElementById('generated').value = emailTemplate;
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i data-lucide="sparkles" style="width: 1.25rem; height: 1.25rem;"></i> Generate Email';
+        sendBtn.style.display = 'flex';
+        lucide.createIcons();
+      }, 1500);
+    }
+
+    // Send email
+    function sendEmail() {
+      const recipient = document.getElementById('recipient').value;
+      const subject = document.getElementById('subject').value;
+      const body = document.getElementById('generated').value;
+      
+      const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailtoLink;
+    }
+  </script>
+
+</body>
+</html>
