@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: JarvisAI
+    runtime: python
+    repo: https://github.com/Krishna-yamsalwar/JarvisAI
+    branch: main
+    python:
+      version: 3.11.11
+    envVars:
+      - key: GEMINI_API_KEY
+        fromDatabase: false
+      - key: NEWSAPI_KEY
+        fromDatabase: false
+      - key: CHROMA_DB_PATH
+        value: /db/chroma_db
+    buildCommand: |
+      pip install poetry
+      poetry install --no-interaction --no-ansi
+    startCommand: gunicorn app:app
+    disk:
+      name: chromadb-disk
+      mountPath: /db
+      sizeGB: 1
